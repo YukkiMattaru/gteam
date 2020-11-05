@@ -1,27 +1,13 @@
-const router = (app) => {
-    app.get('/', (req, res) => {
-        res.send({
-            message: 'Node.JS and Express'
-        })
+module.exports = function(app, db) {
+    app.post('/notes', (req, res) => {
+        const note = { text: req.body.body, title: req.body.title };
+        db.collection('notes').insert(note, (err, result) => {
+            if (err) {
+                res.send({ 'error': 'An error has occurred' });
+            } else {
+                res.send(result.ops[0]);
+            }
+        });
     });
+};
 
-    app.get('/login', (req, res) => {
-        res.send({
-            "id": req.query.id,
-            "count": req.query.count
-        })
-    })
-
-   /* app.post("/register", function (request, response) {
-        if(!request.body) return response.sendStatus(400);
-        console.log(request.body);
-        response.send(`${request.body.userName} - ${request.body.userAge}`);
-    });
-
-    app.delete();
-
-    app.update()*/
-
-}
-
-module.exports = router;
