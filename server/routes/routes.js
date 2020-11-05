@@ -5,13 +5,23 @@ const router = (app) => {
         })
     });
 
-    app.get('/auth', (req, res) => {
+    app.get('/login', (req, res) => {
         res.send({
-            username: req.query.username,
-            password: req.query.password
+            "id": req.query.id,
+            "count": req.query.count
         })
-        console.log(req.query.username, req.query.password)
     })
+
+   /* app.post("/register", function (request, response) {
+        if(!request.body) return response.sendStatus(400);
+        console.log(request.body);
+        response.send(`${request.body.userName} - ${request.body.userAge}`);
+    });
+
+    app.delete();
+
+    app.update()*/
+
 }
 
 module.exports = router;
