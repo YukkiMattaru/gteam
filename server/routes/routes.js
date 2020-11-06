@@ -8,7 +8,13 @@ const router = (app) => {
     app.get('/login', (req, res) => {
         res.send({
             "id": req.query.id,
-            "count": req.query.count
+            "password": req.query.password
+        })
+    })
+
+    app.get('/register', (req, res) => {
+        res.send({
+            "message": "YOU REGISTERED"
         })
     })
 
