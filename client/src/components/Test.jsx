@@ -9,13 +9,13 @@ class Test extends React.Component {
 
     async componentDidMount() {
         this.response = await axios
-            .get('login?id=yukkim&password=123123')
+            .get('/login')
     }
 
     render () {
         return (
             <div>
-                {this.response ? this.response.data.id : ""}
+                {this.response ? this.response.data : ""}
             </div>
         )
     }

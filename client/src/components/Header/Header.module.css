@@ -1,0 +1,17 @@
+.header {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    background-color: #dad;
+    align-content: center;
+    align-items: center;
+}
+
+.nickName {
+    margin-right: 1em;
+}
+
+.icon {
+    width: 5%;
+}

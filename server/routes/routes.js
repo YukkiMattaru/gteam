@@ -13,5 +13,13 @@ module.exports = function(app, db) {
         res.send({
             "message": "hello"
         })
+        console.log('hey')
+    })
+
+    app.get('/login', (req, res) => {
+        res.send({
+            "message": 'hello'
+        })
+        console.log('hey hey')
     })
 };
