@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
+import {NavLink} from "react-router-dom";
 
 const Header = (props) => {
 
@@ -9,7 +10,8 @@ const Header = (props) => {
       <header className={styles.header}>
           <div><img className={styles.icon} src={iconPath} alt="icon" /></div>
           <div>Зеленая энергетика</div>
-          <div className={styles.nickName}>NickName</div>
+          <NavLink to='/login'>Логин</NavLink>
+          <NavLink to='/register'>Регистрация</NavLink>
       </header>
     );
 }

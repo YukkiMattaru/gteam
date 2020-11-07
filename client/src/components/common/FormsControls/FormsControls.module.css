@@ -1,0 +1,15 @@
+.formControl {}
+
+.formControl.error input {
+    border: 2px solid red;
+}
+
+.formControl.error span {
+    color: red;
+}
+
+.formSummaryError {
+    padding: 1px;
+    color: rosybrown;
+    display: inline-block;
+}

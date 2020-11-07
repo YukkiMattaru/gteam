@@ -8,20 +8,26 @@ import styles from './App.module.css';
 import Main from "./components/Main/Main";
 import Profile from "./components/Profile/Profile";
 import TradeArea from "./components/TradeArea/TradeArea";
+import Register from "./components/Register/Register";
+import {Provider} from "react-redux";
+import store from "./redux/store";
 
 class App extends Component {
     render() {
         return (
             <BrowserRouter>
-                <div className={styles.appWrapper}>
-                    <Header/>
-                    <Nav/>
-                    <div className={styles.content}>
-                        <Route exact path="/" component={Main}/>
-                        <Route exact path="/profile" component={Profile}/>
-                        <Route exact path="/tradearea" component={TradeArea}/>
+                <Provider store={store}>
+                    <div className={styles.appWrapper}>
+                        <Header/>
+                        <Nav/>
+                        <div className={styles.content}>
+                            <Route exact path="/" render={() => <Main/>}/>
+                            <Route exact path="/profile" render={() => <Profile/>}/>
+                            <Route exact path="/tradearea" render={() => <TradeArea/>}/>
+                            <Route exact path="/register" render={() => <Register/>}/>
+                        </div>
                     </div>
-                </div>
+                </Provider>
             </BrowserRouter>
         )
     }

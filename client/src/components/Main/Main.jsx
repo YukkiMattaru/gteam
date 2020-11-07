@@ -9,4 +9,17 @@ const Main = () => {
     )
 }
 
+class MainContainer extends React.Component {
+
+    componentDidMount() {
+
+    }
+
+    render () {
+        return (
+            <Main />
+        )
+    }
+}
+
 export default Main;
