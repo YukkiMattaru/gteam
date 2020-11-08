@@ -44,7 +44,8 @@ module.exports = function (app, db) {
             .catch(error => res.send(error))
     })
     app.delete('/users', (req, res) => {
-        db.db('depression').collection('users').deleteOne({userName: req.body.userName})
+        db.db('depression').collection('counters').deleteMany({userID: Number(req.body.userID)}).then().catch()
+        db.db('depression').collection('users').deleteOne({_id: Number(req.body.userID)})
             .then(result => {
                 res.send(result.result)
             })
@@ -53,11 +54,6 @@ module.exports = function (app, db) {
             })
     })
 
-    app.get('/', (req, res) => {
-        res.send({
-            "message": "/"
-        });
-    })
     app.get('/me', (req, res) => {
         let payload = {
             "userName": req.query.userName
