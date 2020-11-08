@@ -3,10 +3,12 @@ import {registerThunk} from "./registerReducer";
 import {reducer as formReducer} from 'redux-form';
 import {applyMiddleware} from "redux";
 import thunkMiddleware from "redux-thunk";
+import authReducer from "./authReducer";
 
 
 let reducers = combineReducers({
     register: registerThunk,
+    auth: authReducer,
     form: formReducer
 });
 

@@ -11,6 +11,7 @@ import TradeArea from "./components/TradeArea/TradeArea";
 import Register from "./components/Register/Register";
 import {Provider} from "react-redux";
 import store from "./redux/store";
+import Login from "./components/Login/Login";
 
 class App extends Component {
     render() {
@@ -25,6 +26,7 @@ class App extends Component {
                             <Route exact path="/profile" render={() => <Profile/>}/>
                             <Route exact path="/tradearea" render={() => <TradeArea/>}/>
                             <Route exact path="/register" render={() => <Register/>}/>
+                            <Route exact path="/login" render={() => <Login/>}/>
                         </div>
                     </div>
                 </Provider>
