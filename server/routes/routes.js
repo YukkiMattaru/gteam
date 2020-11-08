@@ -5,6 +5,33 @@ module.exports = function (app, db) {
             else res.send(result)
         })
     })
+
+    app.get('/users/:id', (req, res) => {
+        let parameters = {
+            "userName": req.query.userName,
+            "hashPassword": req.query.hashPassword
+        }
+        db.db('depression').collection('users').findOne(parameters)
+            .then(result => {
+                if (!result) {
+                    res.send({
+                        "resultCode": -1,
+                        "body": {
+                            "message": "Неправильный логин и пароль"
+                        }
+                    })
+                }
+                else {
+                    res.send({
+                        "resultCode": 0,
+                        "body": {
+                            "item": result
+                        }
+                    })
+                }
+            })
+    })
+
     app.post('/users', (req, res) => {
         const myDB = db.db('depression');
         myDB.collection('users').findOne({userName: req.body.userName})

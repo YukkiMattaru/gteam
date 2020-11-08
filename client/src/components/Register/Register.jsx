@@ -15,9 +15,6 @@ const RegisterForm = ({handleSubmit, error}) => {
             <option value="manufacturer">Производитель</option>
             <option value="trader">Покупатель/продавец</option>
         </Field>
-        { error && <div className={styles.formSummaryError}>
-            {error}
-        </div> }
         <div>
             <button>Регистрация</button>
         </div>
