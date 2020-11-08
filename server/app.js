@@ -11,9 +11,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-MongoClient.connect(db.url2, {useNewUrlParser: true, useUnifiedTopology: true},(err, database) => {
+MongoClient.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true},(err, database) => {
     if (err) return console.log(err)
-    require('./routes')(app, database);
+    require('./routes/index')(app, database);
     app.listen(port, () => {
         console.log('We are live on ' + port);
     });
