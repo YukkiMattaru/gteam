@@ -1,23 +1,30 @@
 module.exports = function (app, db) {
     app.get('/counters', (req, res) => {
-        db.db('depression').collection('counters').find({_id: req.query.serialNumber})
+        debugger;
+        db.db('depression').collection('counters').findOne({_id: req.query.serialNumber.toString()})
             .then(result => {
                 if (!result)
                     res.send({
                         "resultCode": -1,
-                        "body": {"message": "такого счетчика нет"}
+                        "body": {
+                            "message": "такого счетчика нет"
+                        }
                     })
                 else {
                     res.send({
-                        'resultCode': 0,
-                        "body": {'item': result.ops[0]}
+                        "resultCode": 0,
+                        "body": {
+                            "item": result
+                        }
                     })
                 }
             })
             .catch(error => {
                 res.send({
-                    'resultCode': -2,
-                    'body': {'message': 'необработанная ошибка'}
+                    "resultCode": -2,
+                    "body": {
+                        "message": error ? error : "unexpected error"
+                    }
                 })
             })
 
@@ -33,7 +40,8 @@ module.exports = function (app, db) {
                     if (req.body.serialNumber && req.body.userID) {
                         const counter = {
                             _id: req.body.serialNumber,
-                            userID: req.body.userID
+                            userID: Number(req.body.userID),
+                            active: 1
                         };
                         myDB.collection('counters').insertOne(counter)
                             .then(result => {
@@ -72,6 +80,7 @@ module.exports = function (app, db) {
             const myDB = db.db('depression');
             myDB.collection('counters').findOne({_id: req.body.serialNumber})
                 .then(result => {
+                    console.log(result)
                     if (result) {
                         if (req.body.serialNumber && req.body.userID) {
                             db.db('depression').collection('counters').updateOne({
@@ -80,12 +89,12 @@ module.exports = function (app, db) {
                                 },
                                 {
                                     $push: {
-                                        value: [{
-                                            date: new Date(res.body.date),
+                                        value: {
+                                            date: new Date(req.body.date),
                                             energy: {
-                                                t1: res.body.t1, t2: res.body.t2, t3: res.body.t3, t4: res.body.t4
+                                                t1: req.body.t1, t2: req.body.t2, t3: req.body.t3, t4: req.body.t4
                                             }
-                                        }]
+                                        }
                                     }
                                 })
                                 .then(result => {
