@@ -4,9 +4,10 @@ import {stopSubmit} from "redux-form";
 const SET_AUTH_USER_DATA = 'auth/SET_AUTH_USER_DATA'
 
 let initialState = {
-    userID: null,
     userName: null,
-    isAuth: false
+    userType: null,
+    isAuth: false,
+    sessID: null
 }
 
 const authReducer = (state = initialState, action) => {
@@ -21,20 +22,18 @@ const authReducer = (state = initialState, action) => {
     }
 }
 
-const setAuthUserData = (userID, userName, isAuth) => ({
+const setAuthUserData = (userName, userType, isAuth, sessID) => ({
     type: SET_AUTH_USER_DATA,
-    payload: {userID, userName, isAuth}
+    payload: {userName, userType, isAuth, sessID}
 })
 
 export const loginThunk = (userName, password) => async (dispatch) => {
     debugger;
     let response = await authAPI.login(userName, password)
-    debugger;
     if (response.data.resultCode === 0) {
-        debugger;
         dispatch(setAuthUserData(response.data.body.item._id, response.data.body.item.userName, true))
     } else {
-        let message = response.message ? response.message : "Some Error";
+        let message = response.body.body.message ? response.body.body.message : "Some Error";
         dispatch(stopSubmit("login", {_error: message}));
     }
 }

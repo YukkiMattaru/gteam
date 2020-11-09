@@ -6,7 +6,7 @@ module.exports = function (app, db) {
         })
     })
 
-    app.get('/users/:id', (req, res) => {
+    /*app.get('/users/:id', (req, res) => {
         let parameters = {
             "userName": req.query.userName,
             "hashPassword": req.query.hashPassword
@@ -30,7 +30,7 @@ module.exports = function (app, db) {
                     })
                 }
             })
-    })
+    })*/
 
     app.post('/users', (req, res) => {
         const myDB = db.db('depression');
@@ -70,6 +70,7 @@ module.exports = function (app, db) {
             })
             .catch(error => res.send(error))
     })
+
     app.delete('/users', (req, res) => {
         db.db('depression').collection('counters').deleteMany({userID: Number(req.body.userID)}).then().catch()
         db.db('depression').collection('users').deleteOne({_id: Number(req.body.userID)})

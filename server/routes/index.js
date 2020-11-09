@@ -1,7 +1,10 @@
-const noteRoutes = require('./routes');
-const sertificates=require('./seroutes');
+const users = require('./users');
+const counters = require('./counters');
+const login = require('./login')
+
 module.exports = function(app, db) {
-    noteRoutes(app, db);
-    sertificates(app, db);
+    users(app, db);
+    counters(app, db);
+    login(app, db);
     // Тут, позже, будут и другие обработчики маршрутов
 };

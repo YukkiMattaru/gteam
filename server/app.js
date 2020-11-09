@@ -4,11 +4,13 @@ const port = 3002;
 const bodyParser = require('body-parser');
 const db = require('./config/db');
 const app = express();
+const cookieParser = require('cookie-parser');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(cookieParser('secret key'))
 
 
 MongoClient.connect(db.url2, {useNewUrlParser: true, useUnifiedTopology: true},(err, database) => {
