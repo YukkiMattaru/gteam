@@ -9,12 +9,10 @@ const withCookies = axios.create({
 export const authAPI = {
     login(userName, password) {
         let hashPassword = sha256(password).toString(base64);
-        debugger;
         return axios
             .post('login', {userName, hashPassword})
     },
     me() {
-        debugger;
         return withCookies
             .get(`login`)
     }

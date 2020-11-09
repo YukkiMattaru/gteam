@@ -12,6 +12,14 @@
     margin-right: 1em;
 }
 
+.headerAuth span {
+    margin-right: 1em;
+}
+
+.headerNotAuth a {
+    margin-right: 1em;
+}
+
 .icon {
     width: 5%;
 }

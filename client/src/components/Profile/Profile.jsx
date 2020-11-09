@@ -5,17 +5,16 @@ import {Redirect} from "react-router-dom";
 
 class ProfileComponent extends React.Component {
     render() {
-        debugger;
-        return <Profile isAuth={this.props.isAuth} />
+        return <Profile userName={this.props.userName} userType={this.props.userType} isAuth={this.props.isAuth} />
     }
 }
 
 const Profile = (props) => {
-    debugger;
     if (props.isAuth) {
         return (
             <div className={styles.profile}>
-                Profile
+                <div>{props.userName}</div>
+                <div>{props.userType}</div>
             </div>
         )
     }
@@ -23,7 +22,9 @@ const Profile = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-    isAuth: state.auth.isAuth
+    isAuth: state.auth.isAuth,
+    userName: state.auth.userName,
+    userType: state.auth.userType
 })
 
 

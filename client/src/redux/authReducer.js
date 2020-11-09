@@ -46,27 +46,15 @@ export const loginThunk = (userName, password) => async (dispatch) => {
     if (response.data.resultCode === 0) {
         let sessID = cookies.get('sessID')
         dispatch(setSessionID(sessID));
-        debugger;
         dispatch(getUserData());
-        debugger;
     }
 }
 
 export const getUserData = () => async (dispatch) => {
     let response = await authAPI.me();
-    debugger;
     if (response.data.resultCode === 0) {
-        debugger;
-        dispatch(setAuthUserData(response.data.body.userName, response.data.body.userType, true))
+        dispatch(setAuthUserData(response.data.body.item.userName, response.data.body.item.userType, true))
     }
 }
-
-/*
-if (response.data.resultCode === 0) {
-    dispatch(setAuthUserData(response.data.body.item._id, response.data.body.item.userName, true, null))
-} else {
-    let message = response.body.body.message ? response.body.body.message : "Some Error";
-    dispatch(stopSubmit("login", {_error: message}));
-}*/
 
 export default authReducer;
