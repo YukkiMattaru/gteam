@@ -15,5 +15,9 @@ export const authAPI = {
     me() {
         return withCookies
             .get(`login`)
+    },
+    logout() {
+        return withCookies
+            .delete('login')
     }
 }

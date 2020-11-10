@@ -15,7 +15,7 @@ module.exports = function (app, db) {
                                 res.send({
                                     "resultCode": 0,
                                     "body": {
-                                        "item": counters
+                                        counters
                                     }
                                 })
                             } else {

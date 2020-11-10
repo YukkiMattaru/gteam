@@ -5,5 +5,7 @@ const withCookies = axios.create({
 });
 
 export const countersAPI = {
-
+    getAllUserCounters() {
+        return withCookies.get('/counters')
+    }
 }

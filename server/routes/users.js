@@ -37,7 +37,12 @@ module.exports = function (app, db) {
         myDB.collection('users').findOne({userName: req.body.userName})
             .then(result => {
                 if (result) {
-                    res.send('Такой пользователь уже есть')
+                    res.send({
+                        "resultCode": -1,
+                        "body": {
+                            "message": "Пользователь с таким именем уже зарегистрирован"
+                        }
+                    })
                 } else {
                     db.db('depression').collection('users').find()
                         .sort({_id: -1}).limit(1)
@@ -51,24 +56,34 @@ module.exports = function (app, db) {
                             };
                             myDB.collection('users').insertOne(user)
                                 .then(result => {
-                                    res.send(result.ops[0])
+                                    res.send({
+                                        "resultCode": 0,
+                                        "body": {
+                                            "item": "Вы успешно зарегистрированы в системе"
+                                        }
+                                    })
                                 })
                                 .catch(error => {
                                     res.send({
-                                        'resultCode': -1,
-                                        'message': error
+                                        'resultCode': -2,
+                                        'message': error || "Unexpected error"
                                     })
                                 })
                         } else {
                             res.send({
-                                'resultCode': '-1',
-                                'message': 'Переданы пустые значения'
+                                'resultCode': '-3',
+                                'message': 'Для регистрации переданы некорректные значения'
                             })
                         }
                     })
                 }
             })
-            .catch(error => res.send(error))
+            .catch(error => res.send({
+                "resultCode": -4,
+                "body": {
+                    "message": error || "Unexpected error"
+                }
+            }))
     })
 
     app.delete('/users', (req, res) => {

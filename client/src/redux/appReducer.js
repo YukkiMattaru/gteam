@@ -1,4 +1,5 @@
 import {getUserData} from "./authReducer";
+import {countersThunk} from "./countersReducer";
 
 const INITIALIZED_SUCCESS = 'application/INITIALIZED_SUCCESS'
 
@@ -21,9 +22,10 @@ const appReducer = (state = initialState, action) => {
 export const initializingSuccess = () => ({type: INITIALIZED_SUCCESS});
 
 export const initializeApp = () => (dispatch) => {
-    let promise = dispatch(getUserData());
+    let getUser = dispatch(getUserData());
+    let getCounters = dispatch(countersThunk())
 
-    Promise.all([promise])
+    Promise.all([getUser, getCounters])
         .then(() => {
             dispatch(initializingSuccess())
         })

@@ -1,6 +1,7 @@
 import {authAPI} from "../api/authAPI";
 import {stopSubmit} from "redux-form";
 import cookies from "js-cookie";
+import {countersThunk} from "./countersReducer";
 
 const SET_AUTH_USER_DATA = 'auth/SET_AUTH_USER_DATA'
 const SET_SESSION_ID = 'auth/SET_SESSION_ID'
@@ -46,7 +47,16 @@ export const loginThunk = (userName, password) => async (dispatch) => {
     if (response.data.resultCode === 0) {
         let sessID = cookies.get('sessID')
         dispatch(setSessionID(sessID));
-        dispatch(getUserData());
+        dispatch(getUserData())
+    }
+}
+
+export const logoutThunk = () => async (dispatch) => {
+    let response = await authAPI.logout();
+    if (response.data.resultCode === 0) {
+        let sessID = null;
+        dispatch(setSessionID(sessID));
+        dispatch(setAuthUserData(null, null, false))
     }
 }
 
@@ -54,6 +64,7 @@ export const getUserData = () => async (dispatch) => {
     let response = await authAPI.me();
     if (response.data.resultCode === 0) {
         dispatch(setAuthUserData(response.data.body.item.userName, response.data.body.item.userType, true))
+        dispatch(countersThunk())
     }
 }
 

@@ -5,12 +5,14 @@ import {applyMiddleware} from "redux";
 import thunkMiddleware from "redux-thunk";
 import authReducer from "./authReducer";
 import appReducer from "./appReducer";
+import countersReducer from "./countersReducer";
 
 
 let reducers = combineReducers({
     register: registerThunk,
     auth: authReducer,
     app: appReducer,
+    counters: countersReducer,
     form: formReducer
 });
 

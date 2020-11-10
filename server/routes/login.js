@@ -25,7 +25,10 @@ module.exports = function (app, db) {
                         })
                         .then(result => {
                             if (result) {
-                                res.cookie('sessID', sessID)
+                                res.cookie('sessID', sessID, {
+                                    maxAge: 3600 * 24,
+                                    secure: true
+                                })
                                 res.send({
                                     "resultCode": 0,
                                     "body": {

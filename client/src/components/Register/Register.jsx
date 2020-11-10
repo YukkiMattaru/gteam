@@ -5,6 +5,7 @@ import {requiredField} from "../common/FormsControls/validators";
 import {Field, reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {registerThunk} from "../../redux/registerReducer";
+import {Redirect} from "react-router-dom";
 
 const RegisterForm = ({handleSubmit, error}) => {
     return <form onSubmit={handleSubmit}>
@@ -30,12 +31,18 @@ const Register = (props) => {
         props.registerThunk(formData.userName, formData.password, formData.userType)
     }
 
+    if (props.isAuth) {
+        return <Redirect to='/profile' />
+    }
+
     return <div>
         <h1>Регистрация</h1>
         <RegisterReduxForm onSubmit={onSubmit} />
     </div>
 }
 
-const mapStateToProps = (state) => ({ })
+const mapStateToProps = (state) => ({
+    isAuth: state.auth.isAuth
+})
 
 export default connect(mapStateToProps, { registerThunk })(Register)
