@@ -1,3 +1,22 @@
-.appWrapper {
+.bglayer {
+    background-image: url("assets/images/header-bg.jpg");
+    background-size: cover;
+}
 
+.outerLayout {
+    background-color: rgba(38, 34, 76, 0.3);
+    background-size: cover;
+}
+
+.outerLayoutWorkspace {
+    background-size: cover;
+}
+
+.innerLayout {
+    margin: 0 auto;
+    padding: 0 30px;
+    min-width: 200px;
+    width: 1200px;
+    display: flex;
+    flex-direction: column;
 }

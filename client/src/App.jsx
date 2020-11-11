@@ -15,6 +15,7 @@ import Main from "./components/Main/Main";
 import styles from "./App.module.css";
 
 const App = (props) => {
+
     let [width, setWidth] = useState(0);
     let [height, setHeight] = useState(0);
 
@@ -30,37 +31,43 @@ const App = (props) => {
     })
 
     let localStyles = {
-        bglayer: {
-            minWidth: width,
-            minHeight: height,
-            backgroundImage: `url(${bg})`,
-            backgroundSize: 'cover',
+        main: {
+            bglayer: {
+                minWidth: width,
+                minHeight: height,
+            },
+            outerLayout: {
+                minWidth: width,
+                minHeight: height,
+
+            },
+            innerLayout: {
+                minHeight: height,
+            },
         },
-        outerLayout: {
-            minWidth: width,
-            minHeight: height,
-            backgroundColor: 'rgba(38,34,76,0.3)',
-            backgroundSize: 'cover'
-        },
-        innerLayout: {
-            margin: '0 auto',
-            padding: '0 30px',
-            minWidth: '200px',
-            width: '1200px',
-            minHeight: height,
-            display: 'flex',
-            flexDirection: 'column',
+        workspace: {
+            outerLayout: {
+                minWidth: width,
+                minHeight: height,
+                background: 'linear-gradient(-45deg, rgb(80, 91, 114),rgb(48, 61, 85))',
+                backgroundSize: 'cover'
+            },
+            innerLayout: {
+                minHeight: height,
+            }
         }
     }
 
-    if (props.pathname === '/') {
+    if (props.pathname === '/' || props.pathname === '/register' || props.pathname === '/login') {
         return (
-            <div style={localStyles.bglayer}>
-                <div style={localStyles.outerLayout}>
-                    <div style={localStyles.innerLayout}>
+            <div style={localStyles.main.bglayer} className={styles.bglayer}>
+                <div style={localStyles.main.outerLayout} className={styles.outerLayout}>
+                    <div style={localStyles.main.innerLayout} className={styles.innerLayout}>
                         <Header isMain={true}/>
                         <div>
-                            <Main/>
+                            <Route exact path="/" render={() => <Main/>}/>
+                            <Route exact path="/register" render={() => <Register/>}/>
+                            <Route exact path="/login" render={() => <Login/>}/>
                         </div>
                     </div>
                 </div>
@@ -68,13 +75,13 @@ const App = (props) => {
         )
     } else {
         return (
-            <div className={styles.appWrapper}>
-                <Header isMain={false}/>
-                <div>
-                    <Route exact path="/profile" render={() => <Profile/>}/>
-                    <Route exact path="/tradearea" render={() => <TradeArea/>}/>
-                    <Route exact path="/register" render={() => <Register/>}/>
-                    <Route exact path="/login" render={() => <Login/>}/>
+            <div style={localStyles.workspace.outerLayout} className={styles.outerLayoutWorkspace}>
+                <div style={localStyles.workspace.innerLayout} className={styles.innerLayout}>
+                    <Header isMain={false}/>
+                    <div>
+                        <Route exact path="/profile" render={() => <Profile/>}/>
+                        <Route exact path="/tradearea" render={() => <TradeArea/>}/>
+                    </div>
                 </div>
             </div>
         )
@@ -82,13 +89,11 @@ const App = (props) => {
 }
 
 class AppContainer extends Component {
-
     componentDidMount() {
         this.props.initializeApp();
     }
 
     render() {
-        console.log(this.props.history.location.pathname)
         if (!this.props.initialized) {
             return <Preloader/>
         }
