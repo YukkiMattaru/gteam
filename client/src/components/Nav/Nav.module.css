@@ -1,29 +1,32 @@
-.nav {
-    background-color: lightgrey;
+.navWrapper {
+    flex-grow: 2;
+}
+
+.navWrapper nav {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-around;
 }
 
-.item {
-    margin-right: 1em;
-    margin-top: 0.3em;
-    margin-bottom: 0.3em;
-}
-
-.item a {
-    color: mediumblue;
+.navItem a {
     text-decoration: none;
-    transition: color .3s;
-    display: block;
-    padding: 10px 0;
-    outline: none;
+    color: white;
 }
 
-.item a:hover {
-    color: red;
+.navAuthItem {
+    padding-left: 1em;
+    border-left: 1px solid white;
 }
 
-.item a.active {
-    color: brown;
+.navAuthItem a {
+    display: inline-block;
+    margin-left: 2em;
+}
+
+
+.authBlock {
+    display: flex;
+    justify-content: space-between;
+}
+
+.authBlock a {
 }

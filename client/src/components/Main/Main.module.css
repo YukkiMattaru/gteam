@@ -1,3 +1,42 @@
 .main {
-    background-color: #aea;
+    margin-top: 140px;
+    text-align: center;
+    color: white;
+    font-family: Poppins, sans-serif;
+}
+
+.title {
+}
+
+.subtitle {
+
+}
+
+.contactUsDescription {
+    font-size: 14px;
+}
+
+.mainRegistration {
+}
+
+.mainRegistration a {
+    margin-top: 10px;
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 42px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border: 1px solid white;
+    border-radius: 50px;
+    background-color: white;
+    text-decoration: none;
+    color: #222;
+    transition: background-color .3s ease;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.mainRegistration a:hover {
+    background: none;
 }

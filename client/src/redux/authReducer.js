@@ -5,12 +5,14 @@ import {countersThunk} from "./countersReducer";
 
 const SET_AUTH_USER_DATA = 'auth/SET_AUTH_USER_DATA'
 const SET_SESSION_ID = 'auth/SET_SESSION_ID'
+const TOGGLE_IS_FETCHING = 'auth/TOGGLE_IS_FETCHING'
 
 let initialState = {
     userName: null,
     userType: null,
     isAuth: false,
-    sessID: null
+    sessID: null,
+    isFetching: false
 }
 
 const authReducer = (state = initialState, action) => {
@@ -25,6 +27,12 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 ...action.payload
             }
+        case TOGGLE_IS_FETCHING: {
+            return {
+                ...state,
+                isFetching: action.isFetching
+            }
+        }
         default:
             return state;
     }
@@ -36,6 +44,8 @@ const setSessionID = (sessID) => ({
         sessID
     }
 })
+
+const toggleIsFetching = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFetching})
 
 const setAuthUserData = (userName, userType, isAuth) => ({
     type: SET_AUTH_USER_DATA,
@@ -61,11 +71,13 @@ export const logoutThunk = () => async (dispatch) => {
 }
 
 export const getUserData = () => async (dispatch) => {
+    dispatch(toggleIsFetching(true));
     let response = await authAPI.me();
     if (response.data.resultCode === 0) {
         dispatch(setAuthUserData(response.data.body.item.userName, response.data.body.item.userType, true))
         dispatch(countersThunk())
     }
+    dispatch(toggleIsFetching(false));
 }
 
 export default authReducer;
