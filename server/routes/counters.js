@@ -53,6 +53,9 @@ module.exports = function (app, db) {
                 })
             })
     })
+    app.get('/allcounters', (req, res) => {
+        databaseCounters.find({}).toArray().then(rest => res.send(rest))
+    })
     /*app.get('/counters', (req, res) => {
         debugger;
         db.db('depression').collection('counters').findOne({_id: req.query.serialNumber.toString()})
@@ -86,10 +89,34 @@ module.exports = function (app, db) {
     app.post('/counters', (req, res) => {
         databaseUsers.findOne({sessID: req.cookies.sessID})
             .then(async user => {
+                let randomEnergyInitValues = [
+                    +(Math.random() * 300).toFixed(2),
+                    +(Math.random() * 300).toFixed(2),
+                    +(Math.random() * 300).toFixed(2),
+                    +(Math.random() * 300).toFixed(2)
+                ]
                 const counter = {
                     _id: req.body.serialNumber,
                     userID: user._id,
-                    active: 1
+                    active: 1,
+                    date: new Date().toISOString(),
+                    value: [{
+                        energy: {
+                            t1: randomEnergyInitValues[0],
+                            t2: randomEnergyInitValues[1],
+                            t3: randomEnergyInitValues[2],
+                            t4: randomEnergyInitValues[3]
+                        }
+                    },
+                        {
+                            energy: {
+                                t1: randomEnergyInitValues[0],
+                                t2: randomEnergyInitValues[1],
+                                t3: randomEnergyInitValues[2],
+                                t4: randomEnergyInitValues[3]
+                            }
+                        }
+                    ]
                 };
                 let isCounter = await databaseCounters.findOne({_id: req.body.serialNumber});
                 if (isCounter) {
@@ -157,42 +184,30 @@ module.exports = function (app, db) {
             )
     })
 
-    app.put('/counters', (req, res) => {
-            const myDB = db.db('depression');
-            myDB.collection('counters').findOne({_id: req.body.serialNumber})
-                .then(result => {
-                    if (result) {
-                        if (req.body.serialNumber && req.body.userID) {
-                            db.db('depression').collection('counters').updateOne({
-                                    _id: req.body.serialNumber,
-                                    userID: +req.body.userID
-                                },
-                                {
-                                    $push: {
-                                        value: {
-                                            date: req.body.date,
-                                            energy: {
-                                                t1: req.body.t1, t2: req.body.t2, t3: req.body.t3, t4: req.body.t4
-                                            }
-                                        }
-                                    }
-                                })
-                                .then(result => {
-                                    res.send(result)
-                                })
-                                .catch(error => {
-                                    res.send(error)
-                                })
+    /*
+    * 1. Если у счетчика нет 0 элемента, то обновляем его
+    * 2. Если у счетчика есть 0 элемент, то обновляем новый
+    */
+
+    /*app.put('/counters', (req, res) => {
+        databaseCounters.updateMany({},
+            {
+                $push: {
+                    value: {
+                        date: req.body.date,
+                        energy: {
+                            t1: req.body.t1, t2: req.body.t2, t3: req.body.t3, t4: req.body.t4
                         }
-                    } else {
-                        res.send({
-                            'resultCode': '-1',
-                            'message': 'Нет счетчика'
-                        })
                     }
-                })
-                .catch(error => res.send(error))
-        }
-    )
+                }
+            })
+            .then(result => {
+                res.send(result)
+            })
+            .catch(error => {
+                res.send(error)
+            })
+    })*/
+
 }
 ;

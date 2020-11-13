@@ -1,7 +1,7 @@
 import {authAPI} from "../api/authAPI";
 import {stopSubmit} from "redux-form";
 import cookies from "js-cookie";
-import {countersThunk} from "./countersReducer";
+import {countersThunk, setUserCounters} from "./countersReducer";
 
 const SET_AUTH_USER_DATA = 'auth/SET_AUTH_USER_DATA'
 const SET_SESSION_ID = 'auth/SET_SESSION_ID'
@@ -95,6 +95,7 @@ export const logoutThunk = () => async (dispatch) => {
                 email: null
             }
         }, false))
+        dispatch(setUserCounters([]))
     }
 }
 

@@ -12,17 +12,17 @@ const RegisterForm = ({handleSubmit, error}) => {
         { createField("Логин*", "userName", requiredField, Input) }
         { createField("Пароль*", "password", requiredField, Input, {type: "password"}) }
         <p>Укажите, кем вы являетесь*:</p>
-        <Field name="userType" component="select">
+        <Field name="userType" component="select" validate={requiredField}>
             <option />
             <option value="manufacturer">Производитель</option>
             <option value="trader">Покупатель/продавец</option>
         </Field>
         <p>Личные данные</p>
-        { createField("Полное имя", "fullName", [], Input) }
-        { createField("Название компании", "companyName", [], Input) }
+        { createField("Полное имя", "fullName", [requiredField], Input) }
+        { createField("Название компании", "companyName", [requiredField], Input) }
         { createField("Расположение", "location", [], Input) }
         { createField("Контактный телефон", "phone", [], Input) }
-        { createField("Электронная почта", "email", [], Input) }
+        { createField("Электронная почта", "email", [requiredField], Input) }
         <div>
             <button>Регистрация</button>
         </div>

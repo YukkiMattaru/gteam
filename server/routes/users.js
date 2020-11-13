@@ -77,13 +77,14 @@ module.exports = function (app, db) {
                         .toArray().then(async result => {
                         if (req.body.userName && req.body.hashPassword && req.body.userType) {
                             const user = {
-                                _id: result[0]._id + 1,
+                                _id: result.length ? result[0]._id + 1 : 0,
                                 userName: req.body.userName,
                                 hashPassword: req.body.hashPassword,
-                                userType: req.body.userType
+                                userType: req.body.userType,
+                                receivedCertificates: 0
                             };
                             const userInfo = {
-                                userID: result[0]._id + 1,
+                                userID: result.length ? result[0]._id + 1 : 0,
                                 fullName: req.body.fullName,
                                 companyName: req.body.companyName,
                                 location: req.body.location,

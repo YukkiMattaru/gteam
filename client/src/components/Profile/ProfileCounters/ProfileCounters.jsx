@@ -8,7 +8,7 @@ import {countersAddThunk, deleteCounterThunk} from "../../../redux/countersReduc
 
 const CountersForm = ({handleSubmit, error}) => {
     return <form onSubmit={handleSubmit}>
-        {createField("Серийный номер", "serialNumber", [], Input)}
+        {createField("Серийный номер", "serialNumber", [requiredField], Input)}
         <div>
             <button>Добавить</button>
         </div>
@@ -31,17 +31,18 @@ const CounterItem = (props) => {
         {
             (props.lastValue ? <div><p>Последние показания:</p>
                     <ol>
-                        <li key={"t1"}>{props.lastValue.energy.t1 || "-"}</li>
-                        <li key={"t2"}>{props.lastValue.energy.t2 || "-"}</li>
-                        <li key={"t3"}>{props.lastValue.energy.t3 || "-"}</li>
-                        <li key={"t4"}>{props.lastValue.energy.t4 || "-"}</li>
+                        <li key={"t1"}>{props.lastValue.energy.t1 || "-"} кВт*ч</li>
+                        <li key={"t2"}>{props.lastValue.energy.t2 || "-"} кВт*ч</li>
+                        <li key={"t3"}>{props.lastValue.energy.t3 || "-"} кВт*ч</li>
+                        <li key={"t4"}>{props.lastValue.energy.t4 || "-"} кВт*ч</li>
                     </ol>
-                    <p>Дата обновления: {props.lastValue.date || "-"}</p></div>
+                    <p>Дата обновления: {props.date || "-"}</p></div>
                 : "")
         }
         {
-            (props.active ? <button onClick={() => props.deleteCounter(props.serialNumber, 0)}>Выключить счетчик</button>
-        : <button onClick={() => props.deleteCounter(props.serialNumber, 1)}>Включить счетчик</button>)}
+            (props.active ?
+                <button onClick={() => props.deleteCounter(props.serialNumber, 0)}>Выключить счетчик</button>
+                : <button onClick={() => props.deleteCounter(props.serialNumber, 1)}>Включить счетчик</button>)}
     </div>
 }
 
@@ -59,8 +60,9 @@ const Counters = (props) => {
         {props.counters.length ? props.counters.map(counter => {
             return <CounterItem serialNumber={counter._id}
                                 lastValue={counter.value ? counter.value[counter.value.length - 1] : null}
-                                deleteCounter={deleteCounter} active={counter.active}/>
-        }) : ""}
+                                deleteCounter={deleteCounter} active={counter.active}
+                                date={counter.date}/>
+        }) : "У пользователя нет счетчиков"}
         <p>Добавить счетчик</p>
         <CountersReduxForm onSubmit={onSubmit}/>
     </div>

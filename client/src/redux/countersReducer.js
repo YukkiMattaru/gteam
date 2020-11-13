@@ -13,7 +13,7 @@ const countersReducer = (state = initialState, action) => {
     }
 }
 
-const setUserCounters = (counters) => {
+export const setUserCounters = (counters) => {
     return ({
         type: SET_USER_COUNTERS,
         payload: counters
