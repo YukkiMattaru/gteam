@@ -12,7 +12,14 @@ let initialState = {
     userType: null,
     isAuth: false,
     sessID: null,
-    isFetching: false
+    isFetching: false,
+    userInfo: {
+        fullName: "",
+        companyName: "",
+        email: "",
+        phone: "",
+        location: ""
+    }
 }
 
 const authReducer = (state = initialState, action) => {
@@ -47,9 +54,20 @@ const setSessionID = (sessID) => ({
 
 const toggleIsFetching = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFetching})
 
-const setAuthUserData = (userName, userType, isAuth) => ({
+const setAuthUserData = (userData, isAuth) => ({
     type: SET_AUTH_USER_DATA,
-    payload: {userName, userType, isAuth}
+    payload: {
+        userName: userData.userName,
+        userType: userData.userType,
+        isAuth,
+        userInfo: {
+            fullName: userData.userInfo.fullName,
+            companyName: userData.userInfo.companyName,
+            phone: userData.userInfo.phone,
+            location: userData.userInfo.location,
+            email: userData.userInfo.email,
+        }
+    }
 })
 
 export const loginThunk = (userName, password) => async (dispatch) => {
@@ -66,7 +84,31 @@ export const logoutThunk = () => async (dispatch) => {
     if (response.data.resultCode === 0) {
         let sessID = null;
         dispatch(setSessionID(sessID));
-        dispatch(setAuthUserData(null, null, false))
+        dispatch(setAuthUserData({
+            userName: null,
+            userType: null,
+            userInfo: {
+                fullName: null,
+                companyName: null,
+                phone: null,
+                location: null,
+                email: null
+            }
+        }, false))
+    }
+}
+
+export const infoThunk = (info) => async (dispatch) => {
+    let newUserInfo = {
+        fullName: info.fullName,
+        companyName: info.companyName,
+        location: info.location,
+        phone: info.phone,
+        email: info.email,
+    }
+    let response = await authAPI.updateInfo(newUserInfo);
+    if (response.data.resultCode === 0) {
+        dispatch(getUserData())
     }
 }
 
@@ -74,7 +116,7 @@ export const getUserData = () => async (dispatch) => {
     dispatch(toggleIsFetching(true));
     let response = await authAPI.me();
     if (response.data.resultCode === 0) {
-        dispatch(setAuthUserData(response.data.body.item.userName, response.data.body.item.userType, true))
+        dispatch(setAuthUserData(response.data.body, true))
         dispatch(countersThunk())
     }
     dispatch(toggleIsFetching(false));

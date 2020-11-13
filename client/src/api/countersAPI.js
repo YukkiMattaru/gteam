@@ -7,5 +7,11 @@ const withCookies = axios.create({
 export const countersAPI = {
     getAllUserCounters() {
         return withCookies.get('/counters')
+    },
+    addNewCounter(serialNumber) {
+        return withCookies.post('/counters', {serialNumber})
+    },
+    deleteCounter(serialNumber, code) {
+        return withCookies.delete(`/counters/?serialNumber=${serialNumber}&code=${code}`)
     }
 }

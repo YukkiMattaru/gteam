@@ -1,3 +1,36 @@
 .profile {
-    background-color: #aae;
+    display: grid;
+    background-color: white;
+    grid-template-columns: repeat(2, [col] 1fr);
+    grid-template-rows: 65px 1fr;
+    height: 100%;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+    font-family: Open Sans, sans-serif;
 }
+
+.profileTitle {
+    grid-column: col 1 / span 2;
+    grid-row: 1 / span 1;
+    text-align: center;
+    color: black;
+}
+
+.profileContent {
+    grid-column: col 1 / span 2;
+    grid-row: 2 / span 1;
+    justify-self: center;
+    display: grid;
+    grid-template-columns: repeat(2, [col] 1fr);
+    grid-row-gap: 40px;
+    grid-column-gap: 40px;
+}
+
+.profileNavItem {
+
+}
+
+.profileNavItem a {
+    text-decoration: none;
+}
+

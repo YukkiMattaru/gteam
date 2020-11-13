@@ -7,9 +7,7 @@ let initialState = {}
 const countersReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_USER_COUNTERS:
-            return {
-                items: action.payload
-            }
+            return action.payload
         default:
             return state;
     }
@@ -22,11 +20,24 @@ const setUserCounters = (counters) => {
     })
 }
 
-
 export const countersThunk = () => async (dispatch) => {
     let response = await countersAPI.getAllUserCounters();
     if (response.data.resultCode === 0) {
         dispatch(setUserCounters(response.data.body.counters))
+    }
+}
+
+export const deleteCounterThunk = (serialNumber, code) => async (dispatch) => {
+    let response = await countersAPI.deleteCounter(serialNumber, code)
+    if (response.data.resultCode === 0) {
+        dispatch(countersThunk());
+    }
+}
+
+export const countersAddThunk = (serialNumber) => async (dispatch) => {
+    let response = await countersAPI.addNewCounter(serialNumber);
+    if (response.data.resultCode === 0) {
+        dispatch(countersThunk());
     }
 }
 

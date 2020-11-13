@@ -64,7 +64,7 @@ const App = (props) => {
                 <div style={localStyles.main.outerLayout} className={styles.outerLayout}>
                     <div style={localStyles.main.innerLayout} className={styles.innerLayout}>
                         <Header isMain={true}/>
-                        <div>
+                        <div className={styles.content}>
                             <Route exact path="/" render={() => <Main/>}/>
                             <Route exact path="/register" render={() => <Register/>}/>
                             <Route exact path="/login" render={() => <Login/>}/>
@@ -78,8 +78,8 @@ const App = (props) => {
             <div style={localStyles.workspace.outerLayout} className={styles.outerLayoutWorkspace}>
                 <div style={localStyles.workspace.innerLayout} className={styles.innerLayout}>
                     <Header isMain={false}/>
-                    <div>
-                        <Route exact path="/profile" render={() => <Profile/>}/>
+                    <div className={styles.content}>
+                        <Route path="/profile" render={() => <Profile/>}/>
                         <Route exact path="/tradearea" render={() => <TradeArea/>}/>
                     </div>
                 </div>

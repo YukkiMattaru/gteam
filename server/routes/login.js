@@ -3,6 +3,7 @@ const uuid = require('uuid')
 module.exports = function (app, db) {
 
     const database = db.db('depression').collection("users");
+    const databaseUserInfo = db.db('depression').collection("userInfo");
 
     app.post('/login', (req, res) => {
         database.findOne({userName: req.body.userName, hashPassword: req.body.hashPassword})
@@ -52,29 +53,41 @@ module.exports = function (app, db) {
                         })
                 }
             })
-            .catch(error => res.send(error))
+            .catch(error => res.send({
+                "resultCode": -4,
+                "body": {
+                    "message": error || "Unexpected error from database"
+                }
+            }))
     })
 
     app.get('/login', (req, res) => {
         if (req.cookies.sessID) {
             database.findOne({sessID: req.cookies.sessID})
-                .then(result => {
+                .then(async user => {
+                    let userInfo = await databaseUserInfo.findOne({userID: user._id});
                     res.send({
                         "resultCode": 0,
                         "body": {
-                            "item": {
-                                "userName": result.userName,
-                                "userType": result.userType
-                            }
+                            "userName": user.userName,
+                            "userType": user.userType,
+                            "userInfo": userInfo ? userInfo : null
                         }
                     })
                 })
-                .catch()
+                .catch(error => {
+                    res.send({
+                        "resultCode": -2,
+                        "body": {
+                            "message": error || "Unexpected error from database"
+                        }
+                    })
+                })
         } else {
             res.send({
                 "resultCode": -1,
                 "body": {
-                    "message": "You haven't authorized"
+                    "message": "Вы не авторизованы"
                 }
             })
         }
@@ -103,8 +116,7 @@ module.exports = function (app, db) {
                         }
                     })
                 })
-        }
-        else {
+        } else {
             res.send({
                 "resultCode": -1,
                 "body": {

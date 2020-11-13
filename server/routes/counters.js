@@ -1,7 +1,7 @@
 let toISOString = require('mongodb').ObjectID.toISOString;
+global.fetch = require("node-fetch");
 
 module.exports = function (app, db) {
-
     const databaseCounters = db.db('depression').collection('counters');
     const databaseUsers = db.db('depression').collection('users');
 
@@ -35,8 +35,7 @@ module.exports = function (app, db) {
                                 }
                             })
                         })
-                }
-                else {
+                } else {
                     res.send({
                         "resultCode": -4,
                         "body": {
@@ -54,7 +53,6 @@ module.exports = function (app, db) {
                 })
             })
     })
-
     /*app.get('/counters', (req, res) => {
         debugger;
         db.db('depression').collection('counters').findOne({_id: req.query.serialNumber.toString()})
@@ -86,60 +84,85 @@ module.exports = function (app, db) {
 
     })*/
     app.post('/counters', (req, res) => {
-        const myDB = db.db('depression');
-        myDB.collection('counters').findOne({_id: req.body.serialNumber})
-            .then(result => {
-                if (result) {
-                    res.send('Такой счетчик уже есть')
+        databaseUsers.findOne({sessID: req.cookies.sessID})
+            .then(async user => {
+                const counter = {
+                    _id: req.body.serialNumber,
+                    userID: user._id,
+                    active: 1
+                };
+                let isCounter = await databaseCounters.findOne({_id: req.body.serialNumber});
+                if (isCounter) {
+                    res.send({
+                        "resultCode": -1,
+                        "body": {
+                            "message": "Такой счетчик уже зарегистрирован"
+                        }
+                    })
                 } else {
+                    databaseCounters.insertOne(counter)
+                        .then(() => {
+                            res.send({
+                                "resultCode": 0,
+                            })
+                        })
+                        .catch(error => {
+                            res.send({
+                                "resultCode": -2,
+                                "body": {
+                                    "message": error || "Unexpected error from database"
+                                }
+                            })
+                        })
+                }
+            })
+            .catch(error => {
+                res.send({
+                    "resultCode": -3,
+                    "body": {
+                        "message": error || "Unexpected error from database"
+                    }
+                })
+            })
+    })
 
-                    if (req.body.serialNumber && req.body.userID) {
-                        const counter = {
-                            _id: req.body.serialNumber,
-                            userID: Number(req.body.userID),
-                            active: 1
-                        };
-                        myDB.collection('counters').insertOne(counter)
-                            .then(result => {
-                                res.send(result.ops[0])
+    app.delete('/counters/', (req, res) => {
+        databaseUsers.findOne({sessID: req.cookies.sessID})
+            .then(user => {
+                    if (user) {
+                        databaseCounters.updateOne({userID: user._id, _id: req.query.serialNumber},
+                            {$set: {active: Number(req.query.code)}})
+                            .then(() => {
+                                res.send({
+                                    "resultCode": 0
+                                })
                             })
                             .catch(error => {
                                 res.send({
-                                    'resultCode': -1,
-                                    'message': error
+                                    "resultCode": -2,
+                                    "body": {
+                                        "message": error || "Unexpected error"
+                                    }
                                 })
                             })
                     } else {
                         res.send({
-                            'resultCode': '-1',
-                            'message': 'Переданы пустые значения'
+                            "resultCode": -1,
+                            "body": {
+                                "message": "Пользователь не найден"
+                            }
                         })
                     }
-
                 }
-            })
-            .catch(error => res.send(error))
+            )
     })
-    app.delete('/counters', (req, res) => {
-        db.db('depression').collection('counters').updateOne({_id: req.body.serialNumber, userID: req.body.userID},
-            {
-                $set: {active: 0}
-            })
-            .then(result => {
-                res.send('all done')
-            })
-            .catch(error => {
-                res.send('all not done');
-            })
-    })
+
     app.put('/counters', (req, res) => {
             const myDB = db.db('depression');
             myDB.collection('counters').findOne({_id: req.body.serialNumber})
                 .then(result => {
-                    console.log(result)
                     if (result) {
                         if (req.body.serialNumber && req.body.userID) {
-                            console.log(req.body)
                             db.db('depression').collection('counters').updateOne({
                                     _id: req.body.serialNumber,
                                     userID: +req.body.userID
