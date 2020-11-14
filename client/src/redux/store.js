@@ -6,6 +6,7 @@ import thunkMiddleware from "redux-thunk";
 import authReducer from "./authReducer";
 import appReducer from "./appReducer";
 import countersReducer from "./countersReducer";
+import certificatesReducer from "./certificatesReducer";
 
 
 let reducers = combineReducers({
@@ -13,6 +14,7 @@ let reducers = combineReducers({
     auth: authReducer,
     app: appReducer,
     counters: countersReducer,
+    certificates: certificatesReducer,
     form: formReducer
 });
 

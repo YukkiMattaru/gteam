@@ -71,6 +71,7 @@ module.exports = function (app, db) {
                         "body": {
                             "userName": user.userName,
                             "userType": user.userType,
+                            "totalCounters": user.totalCounters,
                             "userInfo": userInfo ? userInfo : null
                         }
                     })

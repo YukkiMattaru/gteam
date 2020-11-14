@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {loginThunk} from "../../../redux/authReducer";
 import {createField, Input} from "../../common/FormsControls/FormsControls";
 import {countersAddThunk, deleteCounterThunk} from "../../../redux/countersReducer";
+import moment from "moment";
 
 const CountersForm = ({handleSubmit, error}) => {
     return <form onSubmit={handleSubmit}>
@@ -23,7 +24,7 @@ const CounterItem = (props) => {
     let styles = {
         "marginBottom": "10px",
         "padding": "5px 15px",
-        "backgroundColor": "lightgrey",
+        "backgroundColor": "lightgreen",
         "boxSizing": "borderBox"
     }
     return <div style={styles}>
@@ -31,12 +32,12 @@ const CounterItem = (props) => {
         {
             (props.lastValue ? <div><p>Последние показания:</p>
                     <ol>
-                        <li key={"t1"}>{props.lastValue.energy.t1 || "-"} кВт*ч</li>
-                        <li key={"t2"}>{props.lastValue.energy.t2 || "-"} кВт*ч</li>
-                        <li key={"t3"}>{props.lastValue.energy.t3 || "-"} кВт*ч</li>
-                        <li key={"t4"}>{props.lastValue.energy.t4 || "-"} кВт*ч</li>
+                        <li key={"t1"}>{+props.lastValue.energy.t1.toFixed(2) || "-"} кВт*ч</li>
+                        <li key={"t2"}>{+props.lastValue.energy.t2.toFixed(2) || "-"} кВт*ч</li>
+                        <li key={"t3"}>{+props.lastValue.energy.t3.toFixed(2) || "-"} кВт*ч</li>
+                        <li key={"t4"}>{+props.lastValue.energy.t4.toFixed(2) || "-"} кВт*ч</li>
                     </ol>
-                    <p>Дата обновления: {props.date || "-"}</p></div>
+                    <p>Дата обновления: {moment.parseZone(props.date).format('YYYY-MM-DD HH:mm:ss') || "-"}</p></div>
                 : "")
         }
         {
@@ -57,6 +58,7 @@ const Counters = (props) => {
 
     return <div>
         <h2>Счетчики пользователя</h2>
+        <p>Общая выработка: {props.totalCountersValue ? props.totalCountersValue.toFixed(2) : 0} кВт</p>
         {props.counters.length ? props.counters.map(counter => {
             return <CounterItem serialNumber={counter._id}
                                 lastValue={counter.value ? counter.value[counter.value.length - 1] : null}
@@ -69,7 +71,8 @@ const Counters = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-    counters: state.counters
+    counters: state.counters,
+    totalCountersValue: state.auth.totalCountersValue
 })
 
 export default connect(mapStateToProps, {loginThunk, countersAddThunk, deleteCounterThunk})(Counters)

@@ -24,7 +24,8 @@ module.exports = function (app, db) {
                                     "_id": item._id,
                                     "userID": item.users[item.users.length - 1].userID,
                                     "date": item.users[item.users.length - 1].date,
-                                    "active": item.active
+                                    "active": item.active,
+                                    "dateFrom": item.dateFrom
                                 }
                             })
                             if (certificates.length) {
@@ -95,7 +96,7 @@ module.exports = function (app, db) {
         databaseUsers.findOne({sessID: req.cookies.sessID})
             .then(user => {
                 if (user) {
-                    databaseCertificates.findOne({_id: new ObjectID(req.body.certificateID)})
+                    databaseCertificates.findOne({_id: +req.query.id})
                         .then(certificate => {
                             if (certificate && certificate.users[certificate.users.length - 1].userID === user._id) {
                                 databaseCertificates.updateOne({_id: certificate._id},

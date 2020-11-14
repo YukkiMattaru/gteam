@@ -17,53 +17,122 @@ app.use(cookieParser('secret key'))
 MongoClient.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, database) => {
     if (err) {
         MongoClient.connect(db.url2, {useNewUrlParser: true, useUnifiedTopology: true}, (err, database) => {
-                if (err) return console.log(err);
-                require('./routes/index')(app, database);
-                app.listen(port, () => {
-                    console.log('We are live on ' + port);
-                })
-                let CronJob = require('cron').CronJob;
-                let job = new CronJob('* * * * *', function () {
-                    let randomEnergyValues = [
-                        +(Math.random() * 50).toFixed(2),
-                        +(Math.random() * 50).toFixed(2),
-                        +(Math.random() * 50).toFixed(2),
-                        +(Math.random() * 50).toFixed(2)
-                    ]
-                    database.db('depression').collection('counters').updateMany({active: 1},
-                        {
-                            $set: {
-                                date: new Date().toISOString(),
-                            },
-                            $inc: {
-                                "value.1.energy.t1": +randomEnergyValues[0],
-                                "value.1.energy.t2": +randomEnergyValues[1],
-                                "value.1.energy.t3": +randomEnergyValues[2],
-                                "value.1.energy.t4": +randomEnergyValues[3]
-                            }
+            if (err) return console.log(err);
+            require('./routes/index')(app, database);
+            app.listen(port, () => {
+                console.log('We are live on ' + port);
+            })
+
+            const databaseCounters = database.db('depression').collection('counters');
+            const databaseUsers = database.db('depression').collection('users');
+            const databaseCertificates = database.db('depression').collection('certificates');
+
+            let CronJob = require('cron').CronJob;
+            let updateCounters = new CronJob('* * * * * *', function () {
+                let randomEnergyValues = [
+                    +(Math.random() * 1).toFixed(2),
+                    +(Math.random() * 1).toFixed(2),
+                    +(Math.random() * 1).toFixed(2),
+                    +(Math.random() * 1).toFixed(2)
+                ]
+                databaseCounters.updateMany({active: 1},
+                    {
+                        $set: {
+                            date: new Date().toISOString(),
+                        },
+                        $inc: {
+                            "value.1.energy.t1": +randomEnergyValues[0],
+                            "value.1.energy.t2": +randomEnergyValues[1],
+                            "value.1.energy.t3": +randomEnergyValues[2],
+                            "value.1.energy.t4": +randomEnergyValues[3]
                         }
-                    )
-                }, null, true, 'Europe/Moscow');
-                job.start();
-            }
-        )
+                    }
+                )
+            }, null, true, 'Europe/Moscow');
+            updateCounters.start();
+            let updateCertificates = new CronJob('* * * * * *', async function () {
+                databaseCounters.find({}).toArray()
+                    .then(result => {
+                        result.map(counter => {
+                            databaseCounters.updateOne({_id: counter._id},
+                                {
+                                    $set: {
+                                        totalValue: counter.value[1].energy.t1 + counter.value[1].energy.t2 + counter.value[1].energy.t3 + counter.value[1].energy.t4
+                                            - counter.value[0].energy.t1 - counter.value[0].energy.t2 - counter.value[0].energy.t3 - counter.value[0].energy.t4
+                                    }
+                                })
+                                .then()
+                                .catch()
+                        })
+                    })
+                    .catch()
+                databaseUsers.find({}).toArray()
+                    .then(result => {
+                        result.map(user => {
+                            databaseCounters.find({userID: user._id}).toArray()
+                                .then(counters => {
+                                    if (counters.length) {
+                                        let sum = 0;
+                                        for (let i = 0; i < counters.length; i++) {
+                                            sum += counters[i].totalValue
+                                        }
+                                        databaseUsers.updateOne({_id: user._id},
+                                            {
+                                                $set: {
+                                                    totalCounters: sum
+                                                }
+                                            })
+                                    } else {
+                                        databaseUsers.updateOne({_id: user._id},
+                                            {
+                                                $set: {
+                                                    totalCounters: +0
+                                                }
+                                            })
+                                    }
+                                })
+                        })
+                    })
+                databaseUsers.find({}).toArray()
+                    .then(users => {
+                        users.map(user => {
+                            let toReceive = Math.floor(user.totalCounters / 1000) - user.receivedCertificates;
+                            if (toReceive !== 0) {
+                                databaseCertificates.find().sort({_id: -1}).limit(1).toArray().then(result => {
+                                    let date = new Date().toISOString()
+                                    let newCertificate = {
+                                        _id: result.length ? result[0]._id + 1 : 0,
+                                        dateFrom: date,
+                                        active: 1,
+                                        users: [{
+                                            userID: user._id,
+                                            date: date
+                                        }]
+                                    }
+                                    console.log(`Create certificate ${result.length ? result[0]._id + 1 : 0} for ${user._id}`)
+                                    databaseCertificates.insertOne(newCertificate)
+                                        .then()
+                                        .catch()
+                                    databaseUsers.updateOne({_id: user._id}, {
+                                        $inc: {
+                                            receivedCertificates: 1
+                                        }
+                                    })
+                                })
+                            }
+
+                        })
+                    })
+            })
+            updateCertificates.start()
+        })
     } else {
         require('./routes/index')(app, database);
         app.listen(port, () => {
             console.log('We are live on ' + port);
         });
     }
-
-    /*setInterval(() => {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'https://yank0vy3rdna.ru/lamps_info/', false);
-        xhr.send();
-        if (xhr.status !== 200) {
-            console.log(xhr.statusText);
-        } else {
-           console.log(JSON.parse(xhr.responseText));
-        }
-    }, 100000000)*/
 })
+
 
 

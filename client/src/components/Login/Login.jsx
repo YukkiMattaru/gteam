@@ -4,14 +4,15 @@ import {requiredField} from "../common/FormsControls/validators";
 import {reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {loginThunk} from "../../redux/authReducer";
+import styles from "./Login.module.css"
 import {Redirect} from "react-router-dom";
 
 const LoginForm = ({handleSubmit, error}) => {
     return <form onSubmit={handleSubmit}>
-        { createField("Логин", "userName", requiredField, Input) }
-        { createField("Пароль", "password", requiredField, Input, {type: "password"}) }
+        { createField("Логин *", "userName", requiredField, Input) }
+        { createField("Пароль *", "password", requiredField, Input, {type: "password"}) }
         <div>
-            <button>Авторизация</button>
+            <button>Войти в личный кабинет</button>
         </div>
     </form>
 }
@@ -29,9 +30,9 @@ const Login = (props) => {
         return <Redirect to='/profile' />
     }
 
-    return <div>
+    return <div className={styles.login}>
         <h1>Авторизация</h1>
-        <LoginReduxForm onSubmit={onSubmit} />
+        <LoginReduxForm className={styles.form} onSubmit={onSubmit} />
     </div>
 }
 

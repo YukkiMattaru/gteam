@@ -23,9 +23,9 @@ export const initializingSuccess = () => ({type: INITIALIZED_SUCCESS});
 
 export const initializeApp = () => (dispatch) => {
     let getUser = dispatch(getUserData());
-    let getCounters = dispatch(countersThunk())
 
-    Promise.all([getUser, getCounters])
+
+    Promise.all([getUser])
         .then(() => {
             dispatch(initializingSuccess())
         })

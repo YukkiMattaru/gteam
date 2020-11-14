@@ -81,7 +81,8 @@ module.exports = function (app, db) {
                                 userName: req.body.userName,
                                 hashPassword: req.body.hashPassword,
                                 userType: req.body.userType,
-                                receivedCertificates: 0
+                                receivedCertificates: 0,
+                                totalCounters: 0
                             };
                             const userInfo = {
                                 userID: result.length ? result[0]._id + 1 : 0,

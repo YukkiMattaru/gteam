@@ -6,11 +6,12 @@ import {Field, reduxForm} from "redux-form";
 import {connect} from "react-redux";
 import {registerThunk} from "../../redux/registerReducer";
 import {Redirect} from "react-router-dom";
+import style from './Register.module.css'
 
 const RegisterForm = ({handleSubmit, error}) => {
     return <form onSubmit={handleSubmit}>
-        { createField("Логин*", "userName", requiredField, Input) }
-        { createField("Пароль*", "password", requiredField, Input, {type: "password"}) }
+        { createField("Логин *", "userName", requiredField, Input) }
+        { createField("Пароль *", "password", requiredField, Input, {type: "password"}) }
         <p>Укажите, кем вы являетесь*:</p>
         <Field name="userType" component="select" validate={requiredField}>
             <option />
@@ -18,11 +19,11 @@ const RegisterForm = ({handleSubmit, error}) => {
             <option value="trader">Покупатель/продавец</option>
         </Field>
         <p>Личные данные</p>
-        { createField("Полное имя", "fullName", [requiredField], Input) }
-        { createField("Название компании", "companyName", [requiredField], Input) }
+        { createField("Полное имя *", "fullName", [requiredField], Input) }
+        { createField("Название компании *", "companyName", [requiredField], Input) }
         { createField("Расположение", "location", [], Input) }
         { createField("Контактный телефон", "phone", [], Input) }
-        { createField("Электронная почта", "email", [requiredField], Input) }
+        { createField("Электронная почта *", "email", [requiredField], Input) }
         <div>
             <button>Регистрация</button>
         </div>
@@ -42,7 +43,7 @@ const Register = (props) => {
         return <Redirect to='/profile'/>
     }
 
-    return <div>
+    return <div className={style.register}>
         <h1>Регистрация</h1>
         <RegisterReduxForm onSubmit={onSubmit} />
     </div>
