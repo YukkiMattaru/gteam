@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import styles from "./ProfileCertificates.module.css";
 import moment from "moment";
-import {deleteCertificateThunk} from "../../../redux/certificatesReducer";
+import {deleteCertificateThunk, sellCertificateThunk, unsellCertificateThunk} from "../../../redux/certificatesReducer";
 
 const ProfileCertificates = (props) => {
 
@@ -20,6 +20,20 @@ const ProfileCertificates = (props) => {
         }
     }
 
+    let sellCertificate = (id) => {
+        let result = window.confirm(`Вы уверены, что хотите выставить сертификат №${id} на продажу?`)
+        if (result) {
+            props.sellCertificateThunk(id);
+        }
+    }
+
+    let unsellCertificate = (id) => {
+        let result = window.confirm(`Вы уверены, что хотите убрать сертификат №${id} с продажи?`)
+        if (result) {
+            props.unsellCertificateThunk(id);
+        }
+    }
+
     return (
         <div>
             <h2>Действующие зеленые сертификаты</h2>
@@ -29,6 +43,8 @@ const ProfileCertificates = (props) => {
                     <p>{`Выдан: ${moment.parseZone(certificate.date).format('DD-MM-YYYY')}`}</p>
                     <p>Срок действия: до {`${moment.parseZone(certificate.dateFrom).format('DD-MM')}-${Number(moment.parseZone(certificate.dateFrom).format('YYYY'))+3}`}</p>
                     <button onClick={() => deleteCertificate(certificate._id)}>Погасить сертификат</button>
+                    {!certificate.toSell ? <button onClick={() => sellCertificate(certificate._id)}>Выставить сертификат на продажу</button>
+                    : <button onClick={() => unsellCertificate(certificate._id)}>Снять сертификат с продажи</button>}
                 </div>
             }) : "Действующих сертификатов нет"}
         </div>
@@ -40,49 +56,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, {deleteCertificateThunk})(ProfileCertificates)
-
-/* <div>
-            <div>
-                <h2>Действующие зеленые сертификаты</h2>
-                <div>
-                    <div>
-                        <p>Зеленый сертификат №123-7213</p>
-                        <p>Выдан: 13.11.2020</p>
-                        <p>Срок действия: до 13.11.2023</p>
-                    </div>
-                    <br/>
-                    <div>
-                        <p>Зеленый сертификат №123-7214</p>
-                        <p>Выдан: 13.11.2020</p>
-                        <p>Срок действия: до 13.11.2023</p>
-                    </div>
-                    <br/>
-                    <div>
-                        <p>Зеленый сертификат №123-7215</p>
-                        <p>Выдан: 13.11.2020</p>
-                        <p>Срок действия: до 13.11.2023</p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <h3>Проданные зеленые сертификаты</h3>
-                <div>
-                    <div>
-                        <p>Зеленый сертификат №123-7216</p>
-                        <p>Выдан: 13.11.2020</p>
-                        <p>Продан: 14.11.2020</p>
-                        <p>Покупатель: НПК Дедал</p>
-                    </div>
-                </div>
-                <h3>Погашенные зеленые сертификаты</h3>
-                <div>
-                    <div>
-                        <p>Зеленый сертификат №123-7217</p>
-                        <p>Выдан: 13.11.2017</p>
-                        <p>Погашен: 14.11.2020</p>
-                        <p>Комментарий: Истекший срок годности</p>
-                    </div>
-                </div>
-            </div>
-        </div> */
+export default connect(mapStateToProps, {deleteCertificateThunk, sellCertificateThunk, unsellCertificateThunk})(ProfileCertificates)

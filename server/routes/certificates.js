@@ -25,7 +25,8 @@ module.exports = function (app, db) {
                                     "userID": item.users[item.users.length - 1].userID,
                                     "date": item.users[item.users.length - 1].date,
                                     "active": item.active,
-                                    "dateFrom": item.dateFrom
+                                    "dateFrom": item.dateFrom,
+                                    "toSell": item.toSell
                                 }
                             })
                             if (certificates.length) {
@@ -199,38 +200,3 @@ module.exports = function (app, db) {
         }
     )
 };
-
-/*app.post('/certificates', (req, res) => {
-        databaseCertificates.findOne({_id: req.body.serialNumber})
-            .then(result => {
-                if (result) {
-                    res.send('Такой сертификат уже есть')
-                } else {
-
-                    if (req.body.serialNumber && req.body.userID) {
-                        const counter = {
-                            _id: req.body.serialNumber,
-                            userID: Number(req.body.userID),
-                            active: 1
-                        };
-                        myDB.collection('certificates').insertOne(counter)
-                            .then(result => {
-                                res.send(result.ops[0])
-                            })
-                            .catch(error => {
-                                res.send({
-                                    'resultCode': -1,
-                                    'message': error
-                                })
-                            })
-                    } else {
-                        res.send({
-                            'resultCode': '-1',
-                            'message': 'Переданы пустые значения'
-                        })
-                    }
-
-                }
-            })
-            .catch(error => res.send(error))
-    })*/

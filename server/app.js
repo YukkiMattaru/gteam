@@ -97,19 +97,20 @@ MongoClient.connect(db.url, {useNewUrlParser: true, useUnifiedTopology: true}, (
                     .then(users => {
                         users.map(user => {
                             let toReceive = Math.floor(user.totalCounters / 1000) - user.receivedCertificates;
-                            if (toReceive !== 0) {
+                            if (toReceive > 0) {
                                 databaseCertificates.find().sort({_id: -1}).limit(1).toArray().then(result => {
                                     let date = new Date().toISOString()
                                     let newCertificate = {
-                                        _id: result.length ? result[0]._id + 1 : 0,
+                                        _id: result.length ? result[0]._id + 1 : 1,
                                         dateFrom: date,
                                         active: 1,
+                                        toSell: 0,
                                         users: [{
                                             userID: user._id,
                                             date: date
                                         }]
                                     }
-                                    console.log(`Create certificate ${result.length ? result[0]._id + 1 : 0} for ${user._id}`)
+                                    console.log(`Create certificate ${result.length ? result[0]._id + 1 : 1} for ${user._id}`)
                                     databaseCertificates.insertOne(newCertificate)
                                         .then()
                                         .catch()

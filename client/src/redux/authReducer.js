@@ -1,8 +1,8 @@
 import {authAPI} from "../api/authAPI";
-import {stopSubmit} from "redux-form";
 import cookies from "js-cookie";
 import {countersThunk, setUserCounters} from "./countersReducer";
-import {certificatesThunk} from "./certificatesReducer";
+import {certificatesThunk, setUserCertificates} from "./certificatesReducer";
+import {dealsThunk} from "./tradeareaReducer";
 
 const SET_AUTH_USER_DATA = 'auth/SET_AUTH_USER_DATA'
 const SET_SESSION_ID = 'auth/SET_SESSION_ID'
@@ -60,6 +60,7 @@ const setAuthUserData = (userData, isAuth) => ({
     type: SET_AUTH_USER_DATA,
     payload: {
         userName: userData.userName,
+        userID: userData.userID,
         userType: userData.userType,
         totalCountersValue: userData.totalCounters,
         isAuth,
@@ -91,6 +92,7 @@ export const logoutThunk = () => async (dispatch) => {
         dispatch(setAuthUserData({
             userName: null,
             userType: null,
+            userID: null,
             totalCountersValue: null,
             userInfo: {
                 fullName: null,
@@ -101,6 +103,7 @@ export const logoutThunk = () => async (dispatch) => {
             }
         }, false))
         dispatch(setUserCounters([]))
+        dispatch(setUserCertificates([]));
     }
 }
 
@@ -125,6 +128,7 @@ export const getUserData = () => async (dispatch) => {
         dispatch(setAuthUserData(response.data.body, true))
         dispatch(countersThunk())
         dispatch(certificatesThunk())
+        dispatch(dealsThunk())
     }
     dispatch(toggleIsFetching(false));
 }

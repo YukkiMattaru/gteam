@@ -1,4 +1,5 @@
 import {certificatesAPI} from "../api/certificatesAPI";
+import {tradeareaAPI} from "../api/tradeareaAPI";
 
 const SET_USER_CERTIFICATES = 'certificates/SET_USER_CERTIFICATES'
 
@@ -29,6 +30,20 @@ export const certificatesThunk = () => async (dispatch) => {
 
 export const deleteCertificateThunk = (id) => async (dispatch) => {
     let response = await certificatesAPI.deleteCertificate(id)
+    if (response.data.resultCode === 0) {
+        dispatch(certificatesThunk());
+    }
+}
+
+export const sellCertificateThunk = (id) => async (dispatch) => {
+    let response = await tradeareaAPI.sellCertificate(id)
+    if (response.data.resultCode === 0) {
+        dispatch(certificatesThunk());
+    }
+}
+
+export const unsellCertificateThunk = (id) => async (dispatch) => {
+    let response = await tradeareaAPI.unsellCertificate(id)
     if (response.data.resultCode === 0) {
         dispatch(certificatesThunk());
     }

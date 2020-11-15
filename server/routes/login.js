@@ -27,8 +27,6 @@ module.exports = function (app, db) {
                         .then(result => {
                             if (result) {
                                 res.cookie('sessID', sessID, {
-                                    maxAge: 3600 * 24,
-                                    secure: true
                                 })
                                 res.send({
                                     "resultCode": 0,
@@ -72,7 +70,8 @@ module.exports = function (app, db) {
                             "userName": user.userName,
                             "userType": user.userType,
                             "totalCounters": user.totalCounters,
-                            "userInfo": userInfo ? userInfo : null
+                            "userInfo": userInfo ? userInfo : null,
+                            "userID": user._id
                         }
                     })
                 })

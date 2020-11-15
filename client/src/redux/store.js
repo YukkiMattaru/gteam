@@ -7,6 +7,7 @@ import authReducer from "./authReducer";
 import appReducer from "./appReducer";
 import countersReducer from "./countersReducer";
 import certificatesReducer from "./certificatesReducer";
+import tradeareaReducer from "./tradeareaReducer";
 
 
 let reducers = combineReducers({
@@ -15,6 +16,7 @@ let reducers = combineReducers({
     app: appReducer,
     counters: countersReducer,
     certificates: certificatesReducer,
+    tradearea: tradeareaReducer,
     form: formReducer
 });
 

@@ -10,5 +10,5 @@ export const certificatesAPI = {
     },
     deleteCertificate(id) {
         return withCookies.delete(`/certificates?id=${id}`)
-    }
+    },
 }
